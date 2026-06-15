@@ -82,7 +82,7 @@ class Fn:
         }
     
     async def send_message_simple(self,ChatId:str,txt:str,
-                            disableNotification:bool=False,MessageId_For_Replay:str=None,metadata_part:dict=None):
+                            disableNotification:bool=False,MessageId_For_Replay:str=None,metadata_part:list=None):
         """
 
         ### ارسال متن ساده به چت
@@ -92,7 +92,7 @@ class Fn:
           - `txt` (**str**) : متن پیام
           - `disableNotification` (**bool,optional**) : غیرفعال کردن اعلان برای کاربران (پیشفرض: **False**)
           - `MessageId_For_Replay` (**str, optional**) : شناسه پیامی که می‌خواهید به آن ریپلای کنید
-          - `metadata_part` (**dict, optional**) : متادیتا برای فرمت‌بندی، منشن و لینک
+          - `metadata_part` (**list, optional**) : متادیتا برای فرمت‌بندی، منشن و لینک
             
 
         - #### پاسخ :
@@ -102,13 +102,13 @@ class Fn:
 
         - #### مثال :
         ```python
-        mtd = {
+        mtd = [{
                 "type": "Bold", # یکی از انواع متا دیتا ها
                 "from_index" : 1,
                 "length": 3,
                 "link_url" : None, #فقط در صورتی که type برابر با Link باشد استفاده می‌شود.
                 "mention_text_user_id": None #فقط در صورتی که type برابر با MentionText باشد استفاده می‌شود.
-            }
+            }]
         await app.send_message_simple(ChatId=msg.chat_id ,txt="Hello World" , metadata_part=mtd)
         ```
         > ***نکته⚠️*** <br>
@@ -120,7 +120,7 @@ class Fn:
         > ***⚠️نکته*** <br>
         > `metadata_part` :<br>
         > پارامتری است دلخواه , برای قالب بندی متن ارسالی <br>
-        > شما میتوانید دیکشنری حاوی پارامترهایی که در لینک زیر هستند رو بهش پاس بدید :<hr>
+        > شما میتوانید لیستی از دیکشنری های حاوی پارامترهایی که در لینک زیر هستند رو بهش پاس بدید :<hr>
         > [Meta_data-Rubika](https://rubika.ir/botapi/models#metadataPart)
 
         """
@@ -139,7 +139,7 @@ class Fn:
             MetaData = {
                 "meta_data_parts":[]
             }
-            MetaData.update({"meta_data_parts":[metadata_part]})
+            MetaData.update({"meta_data_parts":metadata_part})
             data.update({"metadata":MetaData})
             
         async with aiohttp.ClientSession() as session:
@@ -147,7 +147,7 @@ class Fn:
                 return await response.json()
     
     async def send_keypad(self,ChatId:str,txt:str,chatKeypad:dict,
-                    disableNotification:bool=False,MessageId_For_Replay:str=None,metadata_part:dict=None):
+                    disableNotification:bool=False,MessageId_For_Replay:str=None,metadata_part:list=None):
         
         """
 
@@ -161,7 +161,7 @@ class Fn:
           - `chatKeypad` (**dict**): ساختار کیپد شناور
           - `disableNotification` (**bool , optional**): غیرفعال کردن اعلان (پیشفرض: False)
           - `MessageId_For_Replay` (**str , optional**): شناسه پیام برای ریپلای
-          - `metadata_part` (**dict , optional**): متادیتا برای قالب‌بندی متن
+          - `metadata_part` (**list , optional**): متادیتا برای قالب‌بندی متن
         - #### پاسخ
 
         ```python
@@ -186,13 +186,13 @@ class Fn:
                 "resize_keyboard":False, #تغییر اندازه و ارتفاع دکمه‌ها
                 "one_time_keyboard":False #بسته شدن خودکار کیبورد بعد از اولین انتخاب
             }
-        mtd = {
+        mtd = [{
                     "type": "Bold", # یکی از انواع متا دیتا ها
                     "from_index" : 1,
                     "length": 3,
                     "link_url" : None, #فقط در صورتی که type برابر با Link باشد استفاده می‌شود.
                     "mention_text_user_id": None #فقط در صورتی که type برابر با MentionText باشد استفاده می‌شود.
-            }
+            }]
         await app.send_keypad(ChatId=msg.chat_id , txt="Hello world" , chatKeypad=keypad , metadata_part=mtd)
         ```
         > ***نکته⚠️*** <br>
@@ -204,7 +204,7 @@ class Fn:
         > ***⚠️نکته*** <br>
         > `metadata_part` :<br>
         > پارامتری است دلخواه , برای قالب بندی متن ارسالی <br>
-        > شما میتوانید دیکشنری حاوی پارامترهایی که در لینک زیر هستند رو بهش پاس بدید :<hr>
+        > شما میتوانید لیستی از دیکشنری های حاوی پارامترهایی که در لینک زیر هستند رو بهش پاس بدید :<hr>
         > [Meta_data-Rubika](https://rubika.ir/botapi/models#metadataPart)
 
         - #### برای داشتن اطلاعات بیشتر در مورد اینکه چه جور دکمه هایی رو میتونیم استفاده کنیم
@@ -234,7 +234,7 @@ class Fn:
             MetaData = {
                 "meta_data_parts":[]
             }
-            MetaData.update({"meta_data_parts":[metadata_part]})
+            MetaData.update({"meta_data_parts":metadata_part})
             data.update({"metadata":MetaData})
 
         async with aiohttp.ClientSession() as session:
@@ -242,7 +242,7 @@ class Fn:
                 return await response.json()
     
     async def send_inline_keypad(self,ChatId:str,txt:str,inlineKeypad:dict,
-                    disableNotification=False,MessageId_For_Replay:str=None,metadata_part:dict=None):
+                    disableNotification=False,MessageId_For_Replay:str=None,metadata_part:list=None):
         
         """
         ### ارسال پیام با دکمه شیشه ای
@@ -254,7 +254,7 @@ class Fn:
           - `inlineKeypad` (**dict**): ساختار دکمه‌های زیر پیام
           - `disableNotification` (**bool, optional**): غیرفعال کردن اعلان (پیشفرض: False)
           - `MessageId_For_Replay` (**str, optional**): شناسه پیام برای ریپلای
-          - `metadata_part` (**dict, optional**): متادیتا برای قالب‌بندی متن
+          - `metadata_part` (**list, optional**): متادیتا برای قالب‌بندی متن
 
         - #### پاسخ :
         ```python
@@ -280,13 +280,13 @@ class Fn:
             "resize_keyboard":False, #تغییر اندازه و ارتفاع دکمه‌ها
             "one_time_keyboard":False #بسته شدن خودکار کیبورد بعد از اولین انتخاب
         }
-        mtd = {
+        mtd = [{
                 "type": "Bold", # یکی از انواع متا دیتا ها
                 "from_index" : 1,
                 "length": 3,
                 "link_url" : None, #فقط در صورتی که type برابر با Link باشد استفاده می‌شود.
                 "mention_text_user_id": None #فقط در صورتی که type برابر با MentionText باشد استفاده می‌شود.
-            }
+            }]
         await app.send_inline_keypad(ChatId=msg.chat_id , txt="Hello World" , inlineKeypad=keypad , metadata_part=mtd)
 
         ```
@@ -299,7 +299,7 @@ class Fn:
         > ***⚠️نکته*** <br>
         > `metadata_part` :<br>
         > پارامتری است دلخواه , برای قالب بندی متن ارسالی <br>
-        > شما میتوانید دیکشنری حاوی پارامترهایی که در لینک زیر هستند رو بهش پاس بدید :<hr>
+        > شما میتوانید لیستی از دیکشنری های حاوی پارامترهایی که در لینک زیر هستند رو بهش پاس بدید :<hr>
         > [Meta_data-Rubika](https://rubika.ir/botapi/models#metadataPart)
 
         - #### برای داشتن اطلاعات بیشتر در مورد اینکه چه جور دکمه هایی رو میتونیم استفاده کنیم
@@ -327,7 +327,7 @@ class Fn:
             MetaData = {
                 "meta_data_parts":[]
             }
-            MetaData.update({"meta_data_parts":[metadata_part]})
+            MetaData.update({"meta_data_parts":metadata_part})
             data.update({"metadata":MetaData})
         async with aiohttp.ClientSession() as session:
             async with session.post(url, json=data) as response:
@@ -676,7 +676,7 @@ class Fn:
             async with session.post(url, json=data) as response:
                 return await response.json()
     
-    async def edit_message_text(self,ChatId:str,MessageId,txt,metadata_part:dict=None):
+    async def edit_message_text(self,ChatId:str,MessageId,txt,metadata_part:list=None):
 
         """
         ### ویرایش متن یک پیام قبلی ارسال شده توسط بات
@@ -685,7 +685,7 @@ class Fn:
           - `ChatId` (**str**): شناسه چت
           - `MessageId` (**str**): شناسه پیام مورد نظر برای ویرایش
           - `txt` (**str**): متن جدید
-          - `metadata_part` (**dict, optional**): متادیتا یک دیکشنری برای قالب بندی متن و شامل ویژگی های زیر
+          - `metadata_part` (**list, optional**): متادیتا یک لیست از دیکشنری ها برای قالب بندی متن و شامل ویژگی های زیر
             - `type` : نوع متادیتا(**Bold ,Italic ,Mono ,Underline ,Strike ,Spoiler ,Link ,MentionText ,Pre ,Quote**)
             - `from_index` : اندیس شروع در متن (بر اساس UTF-16) که مقدار آن میتواند بزرگتر یا برابر 0 باشد
             - `length` : طول بخش مورد نظر (بر اساس UTF-16) که باید حتما بزرگتر از 0 باشد
@@ -746,7 +746,7 @@ class Fn:
             MetaData = {
                 "meta_data_parts":[]
             }
-            MetaData.update({"meta_data_parts":[metadata_part]})
+            MetaData.update({"meta_data_parts":metadata_part})
             data.update({"metadata":MetaData})
 
         async with aiohttp.ClientSession() as session:
@@ -1056,21 +1056,21 @@ class Fn:
     
     async def _send_file_by_id(self,ChatId:str,fileId:str,MessageId_For_Replay:str=None,txt=None,disableNotification=False,
                   chatKeypad=None,inlineKeypad=None,chatKeypadType=None,
-                  metadata_part:dict=None):
+                  metadata_part:list=None):
         
         """
         ### ارسال فایل قبلاً آپلود شده با استفاده از شناسه فایل
         
         - #### آرگومان ها :
-          - `ChatId` (str): شناسه چت
-          - `fileId` (str): شناسه فایل آپلود شده
-          - `MessageId_For_Replay` (str, optional): شناسه پیام برای ریپلای
-          - `txt` (str, optional): متن همراه فایل
-          - `disableNotification` (bool): غیرفعال کردن اعلان (پیشفرض: False)
-          - `chatKeypad` (dict, optional): کیپد شناور
-          - `inlineKeypad` (dict, optional): کیپد درون خطی
-          - `chatKeypadType` (str, optional): نوع کیپد شناور ("New" یا "Remove")
-          - `metadata_part` (dict, optional): متادیتا برای قالب‌بندی متن
+          - `ChatId` (**str**): شناسه چت
+          - `fileId` (**str**): شناسه فایل آپلود شده
+          - `MessageId_For_Replay` (**str, optional**): شناسه پیام برای ریپلای
+          - `txt` (**str, optional**): متن همراه فایل
+          - `disableNotification` (**bool**): غیرفعال کردن اعلان (پیشفرض: False)
+          - `chatKeypad` (**dict, optional**): کیپد شناور
+          - `inlineKeypad` (**dict, optional**): کیپد درون خطی
+          - `chatKeypadType` (**str, optional**): نوع کیپد شناور ("New" یا "Remove")
+          - `metadata_part` (**list, optional**): متادیتا برای قالب‌بندی متن
 
         - #### پاسخ :
           ```python
@@ -1112,7 +1112,7 @@ class Fn:
             MetaData = {
                 "meta_data_parts":[]
             }
-            MetaData.update({"meta_data_parts":[metadata_part]})
+            MetaData.update({"meta_data_parts":metadata_part})
             data.update({"metadata":MetaData})
         async with aiohttp.ClientSession() as session:
             async with session.post(url, json=data) as response:
@@ -1202,7 +1202,7 @@ class Fn:
                     text=None, MessageId_For_Replay: str = None,
                     disable_notification=False,
                     chat_keypad=None, inline_keypad=None, chat_keypad_type=None,
-                    metadata_part: dict = None):
+                    metadata_part: list = None):
         """
         ## آپلود و ارسال فایل به چت (مدیریت کامل فرآیند آپلود)
         #### این متد با بهره گیری از دو متد دیگر به نام های<br>(_request_send_file,_send_file_by_id)<br>عمل اپلود فایل روی سرور های روبیکا ,
@@ -1224,7 +1224,7 @@ class Fn:
           - `chat_keypad_type` (**str, optional**): نوع کیپد شناور ("New" یا "Remove")
           - `chat_keypad` (**dict, optional**): کیپد شناور
           - `inline_keypad` (**dict, optional**): کیپد درون خطی
-          - `metadata_part` (**dict, optional**): متادیتا برای قالب‌بندی متن
+          - `metadata_part` (**list, optional**): متادیتا برای قالب‌بندی متن
         >> #### در مورد سه آرگومان آخر اگر احتیاج به راهنمایی دارید لطفا به توضیحات در متد های زیر مراجعه کنید
         >> #### (`send_keypad` , `send_inline_keypad`)
         - ### پاسخ :
