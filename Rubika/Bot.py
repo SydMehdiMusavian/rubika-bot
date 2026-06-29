@@ -6,6 +6,7 @@ from Rubika.Mining import Fetch_Data
 from Rubika.FinitState import state
 from Rubika.Functions import Fn
 from Rubika.Config_Logger import bot_logger , bot_token_var
+import aiofiles
 
 class dispatcher:
     """تابع توزیع کننده داده خام"""
@@ -77,18 +78,38 @@ class dispatcher:
         async with aiohttp.ClientSession() as session:
             self.session = session
             mainOffset = None
+            try :
+                async with aiofiles.open(f"{self.btName}_LastOffset.txt","r") as f :
+                    content = await f.read()
+                    if not content:
+                        mainOffset = None
+                    else:
+                        mainOffset = content
+            except Exception as e :
+                    bot_logger.error(e)
+                    bot_logger.error("Not Problem Bro .Maybe That file not yet be created ! ")
             while True:
                 short_token = self.btName if self.btName else self.token[:8] if self.token else "None_Token"
                 token_ctx = bot_token_var.set(short_token)
                 try:
+
                     update = await self.get_update(offset=mainOffset)
 
-                    if update and update.get("status") == "OK":
+                    if update and update.get("status") == "INVALID_INPUT":
+                        mainOffset = None
+                        update = await self.get_update(offset=mainOffset)
+
+                    elif update and update.get("status") == "OK":
 
                         updates = update["data"]["updates"]
 
                         if updates:
                             mainOffset = update["data"]["next_offset_id"]
+                            try:
+                                async with aiofiles.open(f"{self.btName}_LastOffset.txt","w") as f :
+                                    await f.write(str(mainOffset))
+                            except Exception as e :
+                                bot_logger.error(e)
                             UserLocker = {}
                             for updt in updates:
                                 update_obj = await Main_Update.get_raw_data(update=updt)
