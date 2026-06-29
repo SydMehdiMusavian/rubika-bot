@@ -134,7 +134,10 @@ class StateInjection :
             StateInjection.user_state[self.user_id]["user_data"].update(data)
 
     def clear_state(self):
-        StateInjection.user_state[self.user_id].update({"state" : state() , "user_data" : {}})
+        if self.user_id not in StateInjection.user_state:
+            return
+        StateInjection.user_state[self.user_id]["state"] = state()
+        StateInjection.user_state[self.user_id]["user_data"] = {}
 
 
 
