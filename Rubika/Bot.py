@@ -138,7 +138,7 @@ class dispatcher:
                 finally:
                     bot_token_var.reset(token_ctx)
 
-                await asyncio.sleep(0.5)
+                await asyncio.sleep(1)
 
 
 
